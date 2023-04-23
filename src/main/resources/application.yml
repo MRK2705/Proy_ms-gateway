@@ -46,4 +46,4 @@ eureka:
   client:
     register-with-eureka: true
     service-url:
-      defaultZone: http://192.168.31.149:8701/eureka/
+      defaultZone: http://ms-discovery:8701/eureka/
