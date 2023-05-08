@@ -1,18 +1,4 @@
 services:
-  ms-gateway:
-    image: ms-gateway:1.0.0
-    restart: always
-    mem_limit: 400m
-    ports:
-      - "8282:8282"
-    volumes:
-      - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\gateway\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/gateway/logs
-    environment:
-      EURKEKA_URL: ${EUREKA_URL}
-    networks:
-      - mrk27-network
-    depends_on:
-      - ms-discovery
   ms-discovery:
     image: ms-discovery:1.0.0
     restart: always
@@ -23,6 +9,48 @@ services:
       - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\DiscoveryServer\logs:/DiscoveryServer/logs
     networks:
       - mrk27-network
+  ms-gateway:
+    image: ms-gateway:1.0.0
+    restart: always
+    mem_limit: 400m
+    ports:
+      - "8282:8282"
+    volumes:
+      - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\gateway\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/gateway/logs
+    environment:
+      DISCOVERY_URL: ${DISCOVERY_URL}
+    networks:
+      - mrk27-network
+    depends_on:
+      - ms-discovery
+  ms-inventory:
+    image: ms-inventory:1.0.0
+    restart: always
+    mem_limit: 400m
+    ports:
+      - "1234:1234"
+    volumes:
+      - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\inventory\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/inventory/logs
+    environment:
+      DISCOVERY_URL: ${DISCOVERY_URL}
+    networks:
+      - mrk27-network
+    depends_on:
+      - ms-discovery
+  ms-orders:
+    image: ms-orders:1.0.0
+    restart: always
+    mem_limit: 400m
+    ports:
+      - "5678:5678"
+    volumes:
+      - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\orders\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/orders/logs
+    environment:
+      DISCOVERY_URL: ${DISCOVERY_URL}
+    networks:
+      - mrk27-network
+    depends_on:
+      - ms-discovery
 
 networks:
     mrk27-network:

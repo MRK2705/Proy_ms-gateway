@@ -4,8 +4,6 @@ server:
 spring:
   application:
     name: ms-gateway
-  config:
-    import: optional:file:.env[.properties]
   cloud:
     gateway:
       globalcors:
@@ -37,6 +35,19 @@ spring:
 #        locator:
 #          enabled: true
 #          lower-case-service-id: true
+#          predicates:
+#            - Path=/ms-customer/**
+
+#  datasource:
+#    type: org.postgresql.jdbc2.optional.SimpleDataSource
+#    username: ${USER_NAME:postgres}
+#    password: ${PASSWORD:mysecretpassword}
+#    url: ${URL:jdbc:postgresql://localhost:5432/postgres}
+#  config:
+#    import: optional:file:.env[.properties]
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
 
 management:
   endpoints:
@@ -48,4 +59,4 @@ eureka:
   client:
     register-with-eureka: true
     service-url:
-      defaultZone: ${EUREKA_URL:http://ms-discovery:8701/eureka/}
+      defaultZone: ${DISCOVERY_URL:http://ms-discovery:8701/eureka/}
