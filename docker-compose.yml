@@ -24,15 +24,19 @@ services:
     depends_on:
       - ms-discovery
   ms-inventory:
-    image: ms-inventory:1.0.0
+    image: ms-inventory:1.0.1
     restart: always
     mem_limit: 400m
     ports:
-      - "1234:1234"
+      - "1234:1236"
     volumes:
       - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\inventory\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/inventory/logs
     environment:
       DISCOVERY_URL: ${DISCOVERY_URL}
+      PROFILE: ${prod}
+      URL: ${POSTGRES_URL}
+      USER_NAME: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - mrk27-network
     depends_on:
@@ -51,6 +55,35 @@ services:
       - mrk27-network
     depends_on:
       - ms-discovery
+  ms-reviews:
+    image: ms-reviews:1.0.0
+    restart: always
+    mem_limit: 400m
+    ports:
+      - "9112:9112"
+    volumes:
+      - C:\Users\Mirko Alarcon\Documents\UCB\I-2023\ArqSoftware\ProyectoMS\reviews\logs:/Users/Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/reviews/logs
+    environment:
+      DISCOVERY_URL: ${DISCOVERY_URL}
+    networks:
+      - mrk27-network
+    depends_on:
+      - ms-discovery
+
+  postgres:
+    image: postgres
+    mem_limit: 512m
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      #POSTGRES_DB: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /Mirko Alarcon/Documents/UCB/I-2023/ArqSoftware/ProyectoMS/postgres:/var/lib/postgresql/data
+    networks:
+      - mrk27-network
 
 networks:
     mrk27-network:

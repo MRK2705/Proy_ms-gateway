@@ -18,6 +18,4 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
-ENV URL_DISCOVERY ${DISCOVERY_URL}
-
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","-cp","app:app/lib/*","com.example.msgateway.MsGatewayApplicationKt"]
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.msgateway.MsGatewayApplicationKt"]
