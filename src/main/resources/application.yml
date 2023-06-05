@@ -1,53 +1,55 @@
 server:
   port: 8282
-
 spring:
   application:
     name: ms-gateway
   cloud:
     gateway:
-      globalcors:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      global-cors:
         cors-configurations:
-            '[/**]':
-              - allowedOrigins:
-                - "localhost:4200"
-              - allowedMethods:
-                - "GET"
-                - "POST"
-                - "PUT"
-                - "DELETE"
-                - "OPTIONS"
-      routes:
-        - id: ms-customer
-          uri: lb://ms-customer
-          predicates:
-            - Path=/ms-customer/**
-          filters:
-            - RewritePath=/ms-customer/(?<segment>.*), /$\{segment}
-        - id: ms-account
-          uri: lb://ms-account
-          predicates:
-            - Path=/ms-account/**
-          filters:
-            - RewritePath=/ms-account/(?<segment>.*), /$\{segment}
-# automatic discovery of services
-#      discovery:
-#        locator:
-#          enabled: true
-#          lower-case-service-id: true
-#          predicates:
-#            - Path=/ms-customer/**
+          '[/**]':
+            allowedHeaders:
+              - "Authorization"
+              - "Content-Type"
+              - "Accept"
+              - "Origin"
+              - "Content-Length"
+              - "X-Requested-With"
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
 
-#  datasource:
-#    type: org.postgresql.jdbc2.optional.SimpleDataSource
-#    username: ${USER_NAME:postgres}
-#    password: ${PASSWORD:mysecretpassword}
-#    url: ${URL:jdbc:postgresql://localhost:5432/postgres}
-#  config:
-#    import: optional:file:.env[.properties]
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
+      routes:
+        - id: ms-inventory
+          uri: lb://ms-inventory
+          predicates:
+            - Path=/ms-inventory/**
+          filters:
+            - RewritePath=/ms-inventory/(?<segment>.*), /$\{segment}
+        - id: ms-orders
+          uri: lb://ms-order
+          predicates:
+            - Path=/ms-order/**
+          filters:
+            - RewritePath=/ms-order/(?<segment>.*), /$\{segment}
+        - id: ms-reviews
+          uri: lb://ms-reviews
+          predicates:
+            - Path=/ms-reviews/**
+          filters:
+            - RewritePath=/ms-reviews/(?<segment>.*), /$\{segment}
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
 
 management:
   endpoints:
@@ -59,4 +61,6 @@ eureka:
   client:
     register-with-eureka: true
     service-url:
-      defaultZone: ${DISCOVERY_URL:http://ms-discovery:8701/eureka/}
+      defaultZone: ${DISCOVERY_URL:http://localhost:8710/eureka/}
+
+
